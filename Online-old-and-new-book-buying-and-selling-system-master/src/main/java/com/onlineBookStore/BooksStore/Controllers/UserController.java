@@ -328,56 +328,129 @@ public class UserController {
 		return "user/addStoreForm";
 	}
 
-	@PostMapping("/SaveStoreDetailes")
-	@ResponseBody
-	public String saveStoreData(Model model, Principal p, @RequestBody Map<String, Object> map) {
+//	@PostMapping("/SaveStoreDetailes")
+//	@ResponseBody
+//	public String saveStoreData(Model model, Principal p, @RequestBody Map<String, Object> map) {
+//
+//		User user = userRepository.findByUserEmail(p.getName());
+//		BookStore bookStore = new BookStore();
+//
+//		int offer = Integer.parseInt(map.get("validyType").toString());
+//
+//		bookStore.setDelivery(Boolean.parseBoolean(map.get("deliveryFaci").toString()));
+//		LocalDate date = LocalDate.now();
+//		bookStore.setStartdate(date);
+//		if (offer == 1) {
+//			System.out.println("one here");
+//			bookStore.setEnddate(date.plusMonths(1));
+//		} else if (offer == 2) {
+//			System.out.println("2 here");
+//			bookStore.setEnddate(date.plusMonths(3));
+//		} else if (offer == 3) {
+//			System.out.println("3 here");
+//			bookStore.setEnddate(date.plusMonths(6));
+//		} else if (offer == 4) {
+//			System.out.println("4 here");
+//			bookStore.setEnddate(date.plusYears(1));
+//		}
+//
+//		bookStore.setStoreName(map.get("storeName").toString());
+//		bookStore.setStoreDis(map.get("storeDis").toString());
+//		bookStore.setStoreTime(map.get("storeTime").toString());
+//		bookStore.setStoreAddr(map.get("storeAddr").toString());
+//		Boolean onlineService = Boolean.parseBoolean(map.get("onlineBuy").toString());
+//		System.out.println(onlineService + " " + map.get("key").toString() + " " + map.get("secret"));
+//		if (onlineService) {
+//			bookStore.setOnlinePayment(onlineService);
+//			bookStore.setRZkeyId(map.get("key").toString());
+//			bookStore.setRZkeySecret(map.get("secret").toString());
+//		} else
+//			bookStore.setOnlinePayment(false);
+//		bookStore.setStorePic("default.png");
+//		bookStore.setValidity(true);
+//		bookStore.setCheckByAdmin(false);
+//		user.setBookStore(bookStore);
+//		bookStore.setOwner(user);
+//		userRepository.save(user);
+//		// System.out.println("file " + file.getAbsolutePath());
+//		System.out.println("book store deteails   " + bookStore);
+//		JSONObject options = new JSONObject();
+//		options.put("status", "success");
+//		return options.toString();
+//	}
 
-		User user = userRepository.findByUserEmail(p.getName());
-		BookStore bookStore = new BookStore();
+    @PostMapping("/SaveStoreDetailes")
+    @ResponseBody
+    public String saveStoreData(Model model, Principal p, @RequestBody Map<String, Object> map) {
 
-		int offer = Integer.parseInt(map.get("validyType").toString());
+        System.out.println("SaveStoreDetailes map: " + map); // debug log
 
-		bookStore.setDelivery(Boolean.parseBoolean(map.get("deliveryFaci").toString()));
-		LocalDate date = LocalDate.now();
-		bookStore.setStartdate(date);
-		if (offer == 1) {
-			System.out.println("one here");
-			bookStore.setEnddate(date.plusMonths(1));
-		} else if (offer == 2) {
-			System.out.println("2 here");
-			bookStore.setEnddate(date.plusMonths(3));
-		} else if (offer == 3) {
-			System.out.println("3 here");
-			bookStore.setEnddate(date.plusMonths(6));
-		} else if (offer == 4) {
-			System.out.println("4 here");
-			bookStore.setEnddate(date.plusYears(1));
-		}
+        User user = userRepository.findByUserEmail(p.getName());
+        BookStore bookStore = new BookStore();
 
-		bookStore.setStoreName(map.get("storeName").toString());
-		bookStore.setStoreDis(map.get("storeDis").toString());
-		bookStore.setStoreTime(map.get("storeTime").toString());
-		bookStore.setStoreAddr(map.get("storeAddr").toString());
-		Boolean onlineService = Boolean.parseBoolean(map.get("onlineBuy").toString());
-		System.out.println(onlineService + " " + map.get("key").toString() + " " + map.get("secret"));
-		if (onlineService) {
-			bookStore.setOnlinePayment(onlineService);
-			bookStore.setRZkeyId(map.get("key").toString());
-			bookStore.setRZkeySecret(map.get("secret").toString());
-		} else
-			bookStore.setOnlinePayment(false);
-		bookStore.setStorePic("default.png");
-		bookStore.setValidity(true);
-		bookStore.setCheckByAdmin(false);
-		user.setBookStore(bookStore);
-		bookStore.setOwner(user);
-		userRepository.save(user);
-		// System.out.println("file " + file.getAbsolutePath());
-		System.out.println("book store deteails   " + bookStore);
-		JSONObject options = new JSONObject();
-		options.put("status", "success");
-		return options.toString();
-	}
+        // Defensive parsing of validity
+        Object validityObj = map.get("validyType");
+        int offer = 1; // default 1 month if missing
+        if (validityObj != null && !validityObj.toString().isBlank()) {
+            try {
+                offer = Integer.parseInt(validityObj.toString().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid validyType value, defaulting to 1");
+                offer = 1;
+            }
+        }
+
+        // Delivery facility
+        Object deliveryObj = map.get("deliveryFaci");
+        boolean delivery = false;
+        if (deliveryObj != null) {
+            delivery = Boolean.parseBoolean(deliveryObj.toString());
+        }
+        bookStore.setDelivery(delivery);
+
+        // Start date
+        LocalDate date = LocalDate.now();
+        bookStore.setStartdate(date);
+
+        // End date based on offer
+        if (offer == 1) {
+            bookStore.setEnddate(date.plusMonths(1));
+        } else if (offer == 2) {
+            bookStore.setEnddate(date.plusMonths(3));
+        } else if (offer == 3) {
+            bookStore.setEnddate(date.plusMonths(6));
+        } else if (offer == 4) {
+            bookStore.setEnddate(date.plusYears(1));
+        }
+
+        // Store details (null-safe)
+        bookStore.setStoreName(map.getOrDefault("storeName", "").toString());
+        bookStore.setStoreDis(map.getOrDefault("storeDis", "").toString());
+        bookStore.setStoreTime(map.getOrDefault("storeTime", "").toString());
+        bookStore.setStoreAddr(map.getOrDefault("storeAddr", "").toString());
+
+        // Online payment (disabled by default since Razorpay removed)
+        bookStore.setOnlinePayment(false);
+
+        // Other defaults
+        bookStore.setStorePic("default.png");
+        bookStore.setValidity(true);
+        bookStore.setCheckByAdmin(false);
+
+        // Set owner
+        user.setBookStore(bookStore);
+        bookStore.setOwner(user);
+
+        userRepository.save(user);
+
+        System.out.println("Book store details saved: " + bookStore);
+
+        JSONObject options = new JSONObject();
+        options.put("status", "success");
+        return options.toString();
+    }
+
+
 
 //	@PostMapping("/do_paymentOfStore")
 //	@ResponseBody

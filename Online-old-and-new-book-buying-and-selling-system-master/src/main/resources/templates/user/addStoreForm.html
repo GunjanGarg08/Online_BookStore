@@ -1,261 +1,448 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-	th:replace="user/userPage::layout(~{::section})">
+      th:replace="user/userPage::layout(~{::section})">
 <head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
+    <meta charset="ISO-8859-1">
+    <title>Register Store</title>
 </head>
 <body>
-	<section>
-		<div class="mt-2 p-3 ">
-			<h5 class="text-muted my-2">Fill the store details</h5>
-			<div class="fullDivider"></div>
+<section>
+    <div class="mt-2 p-3 ">
+        <h5 class="text-muted my-2">Fill the store details</h5>
+        <div class="fullDivider"></div>
 
-			<div class="m-md-4 card card-body addBookCard">
+        <div class="m-md-4 card card-body addBookCard">
 
-				<form id="formId" method="Post" enctype="multipart/form-data"
-					th:object="${bookStore}">
-					<!-- 2 column grid layout with text inputs for the first and last names -->
-					<div class=" mb-4">
-						<div class="">
-							<div class="form-outline">
-								<input name="storeName" th:value="${bookStore.storeName}"
-									type="text" id="storeName"
-									placeholder="Enter Book store name here!!"
-									th:classappend="${#fields.hasErrors('storeName')?'is-invalid':''}"
-									class="form-control" />
-								<div th:each="e : ${#fields.errors('storeName')}" th:text="${e}"
-									class="invalid-feedback"></div>
+            <form id="formId" method="Post" enctype="multipart/form-data"
+                  th:object="${bookStore}">
 
-							</div>
-						</div>
-					</div>
-					<!-- validity type we can store the end date off validity  -->
-					<input name="validyType" id="validyType" type="hidden"
-						th:value="${validity}" />
-					<div class="row mb-3">
-						<div class="col">
-							<small class="text-small text-muted">Select the District</small>
-							<div class="input-group ">
-								<div class="input-group-prepend">
-									<i class="fa fa-home bg-light p-2"></i>
-								</div>
-								<select name="storeDis" class="custom-select" id="storeDis">
-									<option selected value="Nashik">nashik</option>
-									<option value="Pimplgaon">Pimplgaon</option>
-									<option value="Dindori">Dindori</option>
-								</select>
-							</div>
-						</div>
-						<div class="col mt-0">
-							<small class="text-small text-muted">Enter the working
-								time</small>
-							<div class="form-outline">
-								<input name="storeTime" th:value="${bookStore.storeTime}"
-									placeholder="12pm to 11pm as like" id="storeTime"
-									class="form-control"
-									th:classappend="${#fields.hasErrors('storeTime')?'is-invalid':''}" />
+                <!-- Store Name -->
+                <div class="mb-4">
+                    <div class="form-outline">
+                        <input name="storeName" th:value="${bookStore.storeName}"
+                               type="text" id="storeName"
+                               placeholder="Enter Book store name here!!"
+                               th:classappend="${#fields.hasErrors('storeName')?'is-invalid':''}"
+                               class="form-control"/>
+                        <div th:each="e : ${#fields.errors('storeName')}" th:text="${e}"
+                             class="invalid-feedback"></div>
+                    </div>
+                </div>
 
-								<div th:each="e : ${#fields.errors('storeTime')}" th:text="${e}"
-									class="invalid-feedback"></div>
+                <!-- validity type -->
+                <input name="validyType" id="validyType" type="hidden"
+                       th:value="${validity}"/>
 
-							</div>
-						</div>
-					</div>
+                <!-- District + Working Time -->
+                <div class="row mb-3">
+                    <div class="col">
+                        <small class="text-small text-muted">Select the District</small>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <i class="fa fa-home bg-light p-2"></i>
+                            </div>
+                            <select name="storeDis" class="custom-select" id="storeDis">
+                                <option selected value="Nashik">Nashik</option>
+                                <option value="Pimplgaon">Pimplgaon</option>
+                                <option value="Dindori">Dindori</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col mt-0">
+                        <small class="text-small text-muted">Enter the working time</small>
+                        <div class="form-outline">
+                            <input name="storeTime" th:value="${bookStore.storeTime}"
+                                   placeholder="12pm to 11pm as like" id="storeTime"
+                                   class="form-control"
+                                   th:classappend="${#fields.hasErrors('storeTime')?'is-invalid':''}"/>
+                            <div th:each="e : ${#fields.errors('storeTime')}" th:text="${e}"
+                                 class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- Delivery Facility -->
+                <div class="form-check mb-3">
+                    <input type="checkbox" name="deliveryFaci"
+                           class="form-check-input" id="deliveryFaci">
+                    <label class="form-check-label text-muted" for="deliveryFaci">
+                        Your store has home delivery service available.
+                    </label>
+                </div>
 
-					<div class="">
-						<div class="form-check">
-							<input onclick="paymentKey()" class="form-check-input"
-								type="checkbox" id="onlineBuy"> <label
-								class="form-check-label text-muted" for="flexCheckIndeterminate">
-								Activate the book buy online facilities </label>
-						</div>
-					</div>
-					<input type="hidden" id="rzKey" th:value="${rzKey}" />
-					<div id="paymentKeys" class="  hide my-4">
-						<label class="text-small text-danger">You have enter the
-							userkey and mgKey for your payment<br>You have not an not
-							key open the razorpay trusted site account and get a key the your
-							online payment will start
-						</label><br/><br/>
-						<div class="input-group m-up-10">
-						
-							<div class="input-group-prepend">
-							<a th:href="@{https://dashboard.razorpay.com/signin?screen=sign_in}" target="_blank" class="input-group-text" id="">Goto Razorpay</a>
-						</div>
-						<input name="RZkeyId" id="RZkeyId" placeholder="Enter Key_Id" type="text"
-							class="form-control"> <input name="RZkeySecret" id="RZkeySecret"
-							placeholder="Enter Key_Secret" type="text" class="form-control">
-						</div>
-					</div>
-					<!-- delevery system  -->
-					<div class="form-check mb-3">
-						<input type="checkbox" name="deliveryFaci"
-							class="form-check-input" id="deliveryFaci"> <label
-							class="form-check-label text-muted" for="flexCheckDefault">
-							your store have home delivery service available. </label>
-					</div>
-					<small class="text-small text-muted">Enter the detailed
-						address</small>
-						<input type="hidden" class="userName" th:value="${user.userName}" />
-						<input type="hidden" class="userEmail" th:value="${user.userEmail}" />
-						<input type="hidden" class="userPhone" th:value="${user.userPhone}" />
-					<textarea id="storeAddr" name="storeAddr"
-						th:text="${bookStore.storeAddr}"
-						th:classappend="${#fields.hasErrors('storeAddr')?'is-invalid':''}"
-						class="form-control" rows="4" cols=""></textarea>
-					<div th:each="e : ${#fields.errors('storeAddr')}" th:text="${e}"
-						class="invalid-feedback"></div>
-					<!-- Submit button -->
-				
-					<button type="submit" class="btn btn-primary btn-block my-4">Place
-						order</button>
-				</form>
+                <!-- Address -->
+                <small class="text-small text-muted">Enter the detailed address</small>
+                <input type="hidden" class="userName" th:value="${user.userName}"/>
+                <input type="hidden" class="userEmail" th:value="${user.userEmail}"/>
+                <input type="hidden" class="userPhone" th:value="${user.userPhone}"/>
+                <textarea id="storeAddr" name="storeAddr"
+                          th:text="${bookStore.storeAddr}"
+                          th:classappend="${#fields.hasErrors('storeAddr')?'is-invalid':''}"
+                          class="form-control" rows="4"></textarea>
+                <div th:each="e : ${#fields.errors('storeAddr')}" th:text="${e}"
+                     class="invalid-feedback"></div>
 
-			</div>
-		</div>
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-primary btn-block my-4">Place order</button>
+            </form>
 
-		<script th:inline="javascript">
+        </div>
+    </div>
 
-		$(document).ready(function (){
-			$("#formId").on('submit' ,function(e){
-				e.preventDefault();
-				
-				/*<![CDATA[*/
-			   
-			      // var store=  /*[[${bookStore.storeName}]]*/;
-			   
-			/*]]>*/
-			
-				var storeName=$("#storeName").val();
-				var storeDis=$("#storeDis").val();
-				var storeTime=$("#storeTime").val();
-			
-				var onlineBuy=document.getElementById("onlineBuy");
-				var deliveryFaci=document.getElementById("deliveryFaci");
-				var storeAddr=$("#storeAddr").val();
-				var validyType=$("#validyType").val();
-				var rzKey=$("#rzKey").val();
-				var key=$("#RZkeyId").val();
-				var secret=$("#RZkeySecret").val();
-				if(storeName==''||storeDis==''||storeTime==''||storeAddr==''){
-					swal.fire("Fill All Information","All fields are necesary to register the new store. please fill the fields","info");
-					return;
-				}
-				
-				if(onlineBuy.checked){
-					if(key=='' || secret=='' || key==null || secret==null){
-						swal.fire("Invalid","Please enter the razorpay keys","info");
-						return;
-					}
-				}
-			
-				
-				var userName=$(".userName").val();
-				var userEmail=$(".userEmail").val();
-				var userPhone=$(".userPhone").val();
-				
-		        var dataform=new FormData(this);
-				$.ajax({
-					type:'POST',
-					url:'/user/do_paymentOfStore',
-					data:JSON.stringify({validyType:validyType}),
-					dataType:'json',
-					enctype: 'multipart/form-data',
-					contentType:'application/json',
-					cache:'false',
-					processData:'false',
-					success:function(response){
-						
-						if(response.status=="created"){
-							let options={
-									key:rzKey,
-									amount:response.amount,
-									currency:'INR',
-									name:'The Online Bookstore',
-									description:'publish the store',
-									image:"https://p.kindpng.com/picc/s/62-622892_as-siraat-logo-portrays-the-spirit-of-serving.png",
-									order_id:response.id,
-									handler:function(response){
-										console.log("payment successfull..");
-										
-										$.ajax({
-											type:'POST',
-											url:'/user/SaveStoreDetailes',
-											data:JSON.stringify({storeName:storeName,key:key,secret:secret,storeDis:storeDis,storeTime:storeTime,onlineBuy:onlineBuy.checked,deliveryFaci:deliveryFaci.checked,storeAddr:storeAddr,validyType:validyType}),
-											dataType:'json',
-											contentType:'application/json',
-											cache:'false',
-											processData:'false',
-											success:function(response){
-												
-												swal.fire({
-													icon:'success',
-													title:"Payment Successfull",
-													text:"Your store registration is successfully done.your book now will publish in few hours ...",
-												})
-												
-												//window.location.assign("/user/myStore");
-											},
-											error:function(error){
-												console.log("error : "+error);
-												alert("error generated");
-											}
-											
-										})
-										
-										
-										
-										
-										
-									},
-									 prefill: {
-									        name: userName,
-									        email: userEmail,
-									        contact: userPhone
-									    },
-									    notes: {
-									        address: "Razorpay Corporate Office"
-									    },
-									    theme: {
-									        color: "#3399cc"
-									    },
-							};
-							var rzp = new Razorpay(options);
-							rzp.on('payment.failed', function (response){
-						        console.log(response.error.code);
-						        console.log(response.error.description);
-						        console.log(response.error.source);
-						        console.log(response.error.step);
-						        console.log(response.error.reason);
-						        console.log(response.error.metadata.order_id);
-						        console.log(response.error.metadata.payment_id);
-						        alert("payment Fialed....");
-						});
-							rzp.open();
-						}
-					},	
-					error:function(error){
-						console.log(error)
-						alert("Something went wrong !! please check net connection...")
-					}
-				})
-				
-			} )
-		})
-		
-		
-			function paymentKey() {
-				var check = document.getElementById("onlineBuy");
-				var div = document.getElementById("paymentKeys");
-				if (check.checked) {
-					div.classList.remove("hide");
-				} else {
-					div.classList.add("hide");
-				}
-			}
-		</script>
-	</section>
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            $("#formId").on('submit', function (e) {
+                e.preventDefault();
+
+                // Gather values
+                var storeName = $("#storeName").val();
+                var storeDis = $("#storeDis").val();
+                var storeTime = $("#storeTime").val();
+                var deliveryFaci = document.getElementById("deliveryFaci");
+                var storeAddr = $("#storeAddr").val();
+                var validyType = $("#validyType").val();
+
+                if (storeName === '' || storeDis === '' || storeTime === '' || storeAddr === '') {
+                    swal.fire("Fill All Information",
+                        "All fields are necessary to register the new store. Please fill the fields.",
+                        "info");
+                    return;
+                }
+
+                // AJAX to save store (Razorpay removed)
+                $.ajax({
+                    type: 'POST',
+                    url: '/user/SaveStoreDetailes',
+                    data: JSON.stringify({
+                        storeName: storeName,
+                        storeDis: storeDis,
+                        storeTime: storeTime,
+                        onlineBuy: false,
+                        deliveryFaci: deliveryFaci.checked,
+                        storeAddr: storeAddr,
+                        validyType: validyType
+                    }),
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    cache: false,
+                    processData: false,
+                    success: function (response) {
+                        swal.fire({
+                            icon: 'success',
+                            title: "Store Registered",
+                            text: "Your store registration is successful!"
+                        }).then(() => {
+                            window.location.assign("/user/myStore");
+                        });
+                    },
+                    error: function (error) {
+                        console.log("error : ", error);
+                        swal.fire("Error", "Something went wrong while saving store", "error");
+                    }
+                });
+            });
+        });
+    </script>
+</section>
 </body>
 </html>
+
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org"-->
+<!--	th:replace="user/userPage::layout(~{::section})">-->
+<!--<head>-->
+<!--<meta charset="ISO-8859-1">-->
+<!--<title>Insert title here</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--	<section>-->
+<!--		<div class="mt-2 p-3 ">-->
+<!--			<h5 class="text-muted my-2">Fill the store details</h5>-->
+<!--			<div class="fullDivider"></div>-->
+
+<!--			<div class="m-md-4 card card-body addBookCard">-->
+
+<!--				<form id="formId" method="Post" enctype="multipart/form-data"-->
+<!--					th:object="${bookStore}">-->
+<!--					&lt;!&ndash; 2 column grid layout with text inputs for the first and last names &ndash;&gt;-->
+<!--					<div class=" mb-4">-->
+<!--						<div class="">-->
+<!--							<div class="form-outline">-->
+<!--								<input name="storeName" th:value="${bookStore.storeName}"-->
+<!--									type="text" id="storeName"-->
+<!--									placeholder="Enter Book store name here!!"-->
+<!--									th:classappend="${#fields.hasErrors('storeName')?'is-invalid':''}"-->
+<!--									class="form-control" />-->
+<!--								<div th:each="e : ${#fields.errors('storeName')}" th:text="${e}"-->
+<!--									class="invalid-feedback"></div>-->
+
+<!--							</div>-->
+<!--						</div>-->
+<!--					</div>-->
+<!--					&lt;!&ndash; validity type we can store the end date off validity  &ndash;&gt;-->
+<!--					<input name="validyType" id="validyType" type="hidden"-->
+<!--						th:value="${validity}" />-->
+<!--					<div class="row mb-3">-->
+<!--						<div class="col">-->
+<!--							<small class="text-small text-muted">Select the District</small>-->
+<!--							<div class="input-group ">-->
+<!--								<div class="input-group-prepend">-->
+<!--									<i class="fa fa-home bg-light p-2"></i>-->
+<!--								</div>-->
+<!--								<select name="storeDis" class="custom-select" id="storeDis">-->
+<!--									<option selected value="Nashik">nashik</option>-->
+<!--									<option value="Pimplgaon">Pimplgaon</option>-->
+<!--									<option value="Dindori">Dindori</option>-->
+<!--								</select>-->
+<!--							</div>-->
+<!--						</div>-->
+<!--						<div class="col mt-0">-->
+<!--							<small class="text-small text-muted">Enter the working-->
+<!--								time</small>-->
+<!--							<div class="form-outline">-->
+<!--								<input name="storeTime" th:value="${bookStore.storeTime}"-->
+<!--									placeholder="12pm to 11pm as like" id="storeTime"-->
+<!--									class="form-control"-->
+<!--									th:classappend="${#fields.hasErrors('storeTime')?'is-invalid':''}" />-->
+
+<!--								<div th:each="e : ${#fields.errors('storeTime')}" th:text="${e}"-->
+<!--									class="invalid-feedback"></div>-->
+
+<!--							</div>-->
+<!--						</div>-->
+<!--					</div>-->
+
+
+<!--&lt;!&ndash;					<div class="">&ndash;&gt;-->
+<!--&lt;!&ndash;						<div class="form-check">&ndash;&gt;-->
+<!--&lt;!&ndash;							<input onclick="paymentKey()" class="form-check-input"&ndash;&gt;-->
+<!--&lt;!&ndash;								type="checkbox" id="onlineBuy"> <label&ndash;&gt;-->
+<!--&lt;!&ndash;								class="form-check-label text-muted" for="flexCheckIndeterminate">&ndash;&gt;-->
+<!--&lt;!&ndash;								Activate the book buy online facilities </label>&ndash;&gt;-->
+<!--&lt;!&ndash;						</div>&ndash;&gt;-->
+<!--&lt;!&ndash;					</div>&ndash;&gt;-->
+<!--&lt;!&ndash;					<input type="hidden" id="rzKey" th:value="${rzKey}" />&ndash;&gt;-->
+<!--&lt;!&ndash;					<div id="paymentKeys" class="  hide my-4">&ndash;&gt;-->
+<!--&lt;!&ndash;						<label class="text-small text-danger">You have enter the&ndash;&gt;-->
+<!--&lt;!&ndash;							userkey and mgKey for your payment<br>You have not an not&ndash;&gt;-->
+<!--&lt;!&ndash;							key open the razorpay trusted site account and get a key the your&ndash;&gt;-->
+<!--&lt;!&ndash;							online payment will start&ndash;&gt;-->
+<!--&lt;!&ndash;						</label><br/><br/>&ndash;&gt;-->
+<!--&lt;!&ndash;						<div class="input-group m-up-10">&ndash;&gt;-->
+<!--&lt;!&ndash;						&ndash;&gt;-->
+<!--&lt;!&ndash;							<div class="input-group-prepend">&ndash;&gt;-->
+<!--&lt;!&ndash;							<a th:href="@{https://dashboard.razorpay.com/signin?screen=sign_in}" target="_blank" class="input-group-text" id="">Goto Razorpay</a>&ndash;&gt;-->
+<!--&lt;!&ndash;						</div>&ndash;&gt;-->
+<!--&lt;!&ndash;						<input name="RZkeyId" id="RZkeyId" placeholder="Enter Key_Id" type="text"&ndash;&gt;-->
+<!--&lt;!&ndash;							class="form-control"> <input name="RZkeySecret" id="RZkeySecret"&ndash;&gt;-->
+<!--&lt;!&ndash;							placeholder="Enter Key_Secret" type="text" class="form-control">&ndash;&gt;-->
+<!--&lt;!&ndash;						</div>&ndash;&gt;-->
+<!--&lt;!&ndash;					</div>&ndash;&gt;-->
+<!--					&lt;!&ndash; delevery system  &ndash;&gt;-->
+<!--					<div class="form-check mb-3">-->
+<!--						<input type="checkbox" name="deliveryFaci"-->
+<!--							class="form-check-input" id="deliveryFaci"> <label-->
+<!--							class="form-check-label text-muted" for="flexCheckDefault">-->
+<!--							your store have home delivery service available. </label>-->
+<!--					</div>-->
+<!--					<small class="text-small text-muted">Enter the detailed-->
+<!--						address</small>-->
+<!--						<input type="hidden" class="userName" th:value="${user.userName}" />-->
+<!--						<input type="hidden" class="userEmail" th:value="${user.userEmail}" />-->
+<!--						<input type="hidden" class="userPhone" th:value="${user.userPhone}" />-->
+<!--					<textarea id="storeAddr" name="storeAddr"-->
+<!--						th:text="${bookStore.storeAddr}"-->
+<!--						th:classappend="${#fields.hasErrors('storeAddr')?'is-invalid':''}"-->
+<!--						class="form-control" rows="4" cols=""></textarea>-->
+<!--					<div th:each="e : ${#fields.errors('storeAddr')}" th:text="${e}"-->
+<!--						class="invalid-feedback"></div>-->
+<!--					&lt;!&ndash; Submit button &ndash;&gt;-->
+<!--				-->
+<!--					<button type="submit" class="btn btn-primary btn-block my-4">Place-->
+<!--						order</button>-->
+<!--				</form>-->
+
+<!--			</div>-->
+<!--		</div>-->
+
+<!--		<script th:inline="javascript">-->
+
+<!--		$(document).ready(function (){-->
+<!--			$("#formId").on('submit' ,function(e){-->
+<!--				e.preventDefault();-->
+<!--				-->
+<!--				/*<![CDATA[*/-->
+<!--			   -->
+<!--			      // var store=  /*[[${bookStore.storeName}]]*/;-->
+<!--			   -->
+<!--			/*]]>*/-->
+<!--			-->
+<!--				var storeName=$("#storeName").val();-->
+<!--				var storeDis=$("#storeDis").val();-->
+<!--				var storeTime=$("#storeTime").val();-->
+<!--			-->
+<!--				var onlineBuy=document.getElementById("onlineBuy");-->
+<!--				var deliveryFaci=document.getElementById("deliveryFaci");-->
+<!--				var storeAddr=$("#storeAddr").val();-->
+<!--				var validyType=$("#validyType").val();-->
+<!--				var rzKey=$("#rzKey").val();-->
+<!--				var key=$("#RZkeyId").val();-->
+<!--				var secret=$("#RZkeySecret").val();-->
+<!--				if(storeName==''||storeDis==''||storeTime==''||storeAddr==''){-->
+<!--					swal.fire("Fill All Information","All fields are necesary to register the new store. please fill the fields","info");-->
+<!--					return;-->
+<!--				}-->
+<!--				-->
+<!--&lt;!&ndash;				if(onlineBuy.checked){&ndash;&gt;-->
+<!--&lt;!&ndash;					if(key=='' || secret=='' || key==null || secret==null){&ndash;&gt;-->
+<!--&lt;!&ndash;						swal.fire("Invalid","Please enter the razorpay keys","info");&ndash;&gt;-->
+<!--&lt;!&ndash;						return;&ndash;&gt;-->
+<!--&lt;!&ndash;					}&ndash;&gt;-->
+<!--&lt;!&ndash;				}&ndash;&gt;-->
+<!--			-->
+<!--				-->
+<!--				var userName=$(".userName").val();-->
+<!--				var userEmail=$(".userEmail").val();-->
+<!--				var userPhone=$(".userPhone").val();-->
+<!--				-->
+<!--		        var dataform=new FormData(this);-->
+
+
+<!--		        $.ajax({-->
+<!--                    type: 'POST',-->
+<!--                    url: '/user/SaveStoreDetailes',-->
+<!--                    data: JSON.stringify({-->
+<!--                        storeName: storeName,-->
+<!--                        storeDis: storeDis,-->
+<!--                        storeTime: storeTime,-->
+<!--                        onlineBuy: false,   // since Razorpay removed-->
+<!--                        deliveryFaci: deliveryFaci.checked,-->
+<!--                        storeAddr: storeAddr,-->
+<!--                        validyType: validyType-->
+<!--                    }),-->
+<!--                    dataType: 'json',-->
+<!--                    contentType: 'application/json',-->
+<!--                    cache: false,-->
+<!--                    processData: false,-->
+<!--                    success: function(response) {-->
+<!--                        swal.fire({-->
+<!--                            icon: 'success',-->
+<!--                            title: "Store Registered",-->
+<!--                            text: "Your store registration is successful!"-->
+<!--                        }).then(() => {-->
+<!--                            window.location.assign("/user/myStore");-->
+<!--                        });-->
+<!--                    },-->
+<!--                    error: function(error) {-->
+<!--                        console.log("error : " + error);-->
+<!--                        swal.fire("Error", "Something went wrong while saving store", "error");-->
+<!--                    }-->
+<!--                });-->
+
+
+<!--&lt;!&ndash;				$.ajax({&ndash;&gt;-->
+<!--&lt;!&ndash;					type:'POST',&ndash;&gt;-->
+<!--&lt;!&ndash;					url:'/user/do_paymentOfStore',&ndash;&gt;-->
+<!--&lt;!&ndash;					data:JSON.stringify({validyType:validyType}),&ndash;&gt;-->
+<!--&lt;!&ndash;					dataType:'json',&ndash;&gt;-->
+<!--&lt;!&ndash;					enctype: 'multipart/form-data',&ndash;&gt;-->
+<!--&lt;!&ndash;					contentType:'application/json',&ndash;&gt;-->
+<!--&lt;!&ndash;					cache:'false',&ndash;&gt;-->
+<!--&lt;!&ndash;					processData:'false',&ndash;&gt;-->
+<!--&lt;!&ndash;					success:function(response){&ndash;&gt;-->
+<!--&lt;!&ndash;						&ndash;&gt;-->
+<!--&lt;!&ndash;						if(response.status=="created"){&ndash;&gt;-->
+<!--&lt;!&ndash;							let options={&ndash;&gt;-->
+<!--&lt;!&ndash;									key:rzKey,&ndash;&gt;-->
+<!--&lt;!&ndash;									amount:response.amount,&ndash;&gt;-->
+<!--&lt;!&ndash;									currency:'INR',&ndash;&gt;-->
+<!--&lt;!&ndash;									name:'The Online Bookstore',&ndash;&gt;-->
+<!--&lt;!&ndash;									description:'publish the store',&ndash;&gt;-->
+<!--&lt;!&ndash;									image:"https://p.kindpng.com/picc/s/62-622892_as-siraat-logo-portrays-the-spirit-of-serving.png",&ndash;&gt;-->
+<!--&lt;!&ndash;									order_id:response.id,&ndash;&gt;-->
+<!--&lt;!&ndash;									handler:function(response){&ndash;&gt;-->
+<!--&lt;!&ndash;										console.log("payment successfull..");&ndash;&gt;-->
+<!--&lt;!&ndash;										&ndash;&gt;-->
+<!--&lt;!&ndash;										$.ajax({&ndash;&gt;-->
+<!--&lt;!&ndash;											type:'POST',&ndash;&gt;-->
+<!--&lt;!&ndash;											url:'/user/SaveStoreDetailes',&ndash;&gt;-->
+<!--&lt;!&ndash;											data:JSON.stringify({storeName:storeName,key:key,secret:secret,storeDis:storeDis,storeTime:storeTime,onlineBuy:onlineBuy.checked,deliveryFaci:deliveryFaci.checked,storeAddr:storeAddr,validyType:validyType}),&ndash;&gt;-->
+<!--&lt;!&ndash;											dataType:'json',&ndash;&gt;-->
+<!--&lt;!&ndash;											contentType:'application/json',&ndash;&gt;-->
+<!--&lt;!&ndash;											cache:'false',&ndash;&gt;-->
+<!--&lt;!&ndash;											processData:'false',&ndash;&gt;-->
+<!--&lt;!&ndash;											success:function(response){&ndash;&gt;-->
+<!--&lt;!&ndash;												&ndash;&gt;-->
+<!--&lt;!&ndash;												swal.fire({&ndash;&gt;-->
+<!--&lt;!&ndash;													icon:'success',&ndash;&gt;-->
+<!--&lt;!&ndash;													title:"Payment Successfull",&ndash;&gt;-->
+<!--&lt;!&ndash;													text:"Your store registration is successfully done.your book now will publish in few hours ...",&ndash;&gt;-->
+<!--&lt;!&ndash;												})&ndash;&gt;-->
+<!--&lt;!&ndash;												&ndash;&gt;-->
+<!--&lt;!&ndash;												//window.location.assign("/user/myStore");&ndash;&gt;-->
+<!--&lt;!&ndash;											},&ndash;&gt;-->
+<!--&lt;!&ndash;											error:function(error){&ndash;&gt;-->
+<!--&lt;!&ndash;												console.log("error : "+error);&ndash;&gt;-->
+<!--&lt;!&ndash;												alert("error generated");&ndash;&gt;-->
+<!--&lt;!&ndash;											}&ndash;&gt;-->
+<!--&lt;!&ndash;											&ndash;&gt;-->
+<!--&lt;!&ndash;										})&ndash;&gt;-->
+<!--&lt;!&ndash;										&ndash;&gt;-->
+<!--&lt;!&ndash;										&ndash;&gt;-->
+<!--&lt;!&ndash;										&ndash;&gt;-->
+<!--&lt;!&ndash;										&ndash;&gt;-->
+<!--&lt;!&ndash;										&ndash;&gt;-->
+<!--&lt;!&ndash;									},&ndash;&gt;-->
+<!--&lt;!&ndash;									 prefill: {&ndash;&gt;-->
+<!--&lt;!&ndash;									        name: userName,&ndash;&gt;-->
+<!--&lt;!&ndash;									        email: userEmail,&ndash;&gt;-->
+<!--&lt;!&ndash;									        contact: userPhone&ndash;&gt;-->
+<!--&lt;!&ndash;									    },&ndash;&gt;-->
+<!--&lt;!&ndash;									    notes: {&ndash;&gt;-->
+<!--&lt;!&ndash;									        address: "Razorpay Corporate Office"&ndash;&gt;-->
+<!--&lt;!&ndash;									    },&ndash;&gt;-->
+<!--&lt;!&ndash;									    theme: {&ndash;&gt;-->
+<!--&lt;!&ndash;									        color: "#3399cc"&ndash;&gt;-->
+<!--&lt;!&ndash;									    },&ndash;&gt;-->
+<!--&lt;!&ndash;							};&ndash;&gt;-->
+<!--&lt;!&ndash;							var rzp = new Razorpay(options);&ndash;&gt;-->
+<!--&lt;!&ndash;							rzp.on('payment.failed', function (response){&ndash;&gt;-->
+<!--&lt;!&ndash;						        console.log(response.error.code);&ndash;&gt;-->
+<!--&lt;!&ndash;						        console.log(response.error.description);&ndash;&gt;-->
+<!--&lt;!&ndash;						        console.log(response.error.source);&ndash;&gt;-->
+<!--&lt;!&ndash;						        console.log(response.error.step);&ndash;&gt;-->
+<!--&lt;!&ndash;						        console.log(response.error.reason);&ndash;&gt;-->
+<!--&lt;!&ndash;						        console.log(response.error.metadata.order_id);&ndash;&gt;-->
+<!--&lt;!&ndash;						        console.log(response.error.metadata.payment_id);&ndash;&gt;-->
+<!--&lt;!&ndash;						        alert("payment Fialed....");&ndash;&gt;-->
+<!--&lt;!&ndash;						});&ndash;&gt;-->
+<!--&lt;!&ndash;							rzp.open();&ndash;&gt;-->
+<!--&lt;!&ndash;						}&ndash;&gt;-->
+<!--&lt;!&ndash;					},	&ndash;&gt;-->
+<!--&lt;!&ndash;					error:function(error){&ndash;&gt;-->
+<!--&lt;!&ndash;						console.log(error)&ndash;&gt;-->
+<!--&lt;!&ndash;						alert("Something went wrong !! please check net connection...")&ndash;&gt;-->
+<!--&lt;!&ndash;					}&ndash;&gt;-->
+<!--&lt;!&ndash;				})&ndash;&gt;-->
+<!--				-->
+<!--			} )-->
+<!--		})-->
+<!--		-->
+<!--		-->
+<!--			function paymentKey() {-->
+<!--				var check = document.getElementById("onlineBuy");-->
+<!--				var div = document.getElementById("paymentKeys");-->
+<!--				if (check.checked) {-->
+<!--					div.classList.remove("hide");-->
+<!--				} else {-->
+<!--					div.classList.add("hide");-->
+<!--				}-->
+<!--			}-->
+<!--		</script>-->
+<!--	</section>-->
+<!--</body>-->
+<!--</html>-->

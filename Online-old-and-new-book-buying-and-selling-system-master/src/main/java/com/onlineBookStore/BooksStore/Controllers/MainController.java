@@ -561,7 +561,25 @@ public class MainController {
 		return "resetPassword";
 	}
 
-	/*
+    // Add this method to MainController.java
+    @RequestMapping("/reset_password")
+    public String resetPasswordUnderscore(@RequestParam("code") String code, Model model) {
+        // Use the same logic you have for resetPasswordcodeVerification
+        User user = userRepository.findByUserPassword(code);
+        if (user == null) {
+            model.addAttribute("code", "none");
+            model.addAttribute("msg", "wrong");
+        } else {
+            model.addAttribute("msg", "password");
+            model.addAttribute("code", code);
+        }
+        System.out.println("Reset password code : " + code);
+        model.addAttribute("navbar", "bg-fyellow");
+        return "resetPassword";
+    }
+
+
+    /*
 	 * @PostMapping("/saveRatings")
 	 * 
 	 * @ResponseBody public String saveRatings(@RequestBody Map<String, Object> map)
